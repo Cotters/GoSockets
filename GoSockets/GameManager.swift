@@ -16,12 +16,17 @@ struct PlayerPosition: Codable {
   let y: Int
 }
 
+struct Player: Codable {
+  let id: String
+  let position: PlayerPosition
+}
+
 class GameManager: ObservableObject {
   
   private var socketConnection: URLSessionWebSocketTask?
   private let decoder = JSONDecoder()
   
-  @Published private(set) var position = PlayerPosition(x: 0, y: 0)
+  @Published private(set) var player: Player?
   
   func connect() {
     guard let url = URL(string: "ws://localhost:8080/ws") else {
@@ -62,12 +67,12 @@ class GameManager: ObservableObject {
   }
   
   private func handleWebsocketMessage(_ text: String) {
-    print("Response: \(text)")
+    print("Handling message: \(text)")
     let data = text.data(using: .utf8)
     guard let response = try? JSONDecoder().decode(GameResponse.self, from: data ?? Data()) else {
       print("Unable to decode data.")
       return
     }
-    print("Found data: \(response)")
+    player = Player(id: response.playerId, position: response.position)
   }
 }

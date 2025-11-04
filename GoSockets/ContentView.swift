@@ -2,14 +2,18 @@ import SwiftUI
 
 struct ContentView: View {
   
-  @State private var gameManager = GameManager()
+  @ObservedObject private var gameManager = GameManager()
   
   var body: some View {
     VStack {
-      Image(systemName: "globe")
-        .imageScale(.large)
-        .foregroundStyle(.tint)
-      Text("Hello, world!")
+      if let player = gameManager.player {
+        Image(systemName: "globe")
+          .imageScale(.large)
+          .foregroundStyle(.tint)
+        Text("Hello, \(player.id)!")
+      } else {
+        ProgressView()
+      }
     }
     .onAppear {
       gameManager.connect()
