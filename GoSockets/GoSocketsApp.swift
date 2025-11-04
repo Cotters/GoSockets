@@ -4,7 +4,7 @@ import SwiftUI
 struct GoSocketsApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      GameView()
     }
   }
 }
